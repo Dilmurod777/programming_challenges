@@ -23,7 +23,7 @@ fn main() {
     let input_filename = "input.txt";
     let output_filename = "output.txt";
 
-    fs::remove_file(output_filename).unwrap();
+    let _ = fs::remove_file(output_filename);
 
     let contents = fs::read_to_string(input_filename)
         .expect("Cannot read file. Please, check the path!");
