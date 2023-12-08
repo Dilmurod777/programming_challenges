@@ -6,10 +6,10 @@ fn get_cycle_length(n: i32) -> i32 {
     let mut temp = n;
     let mut length = 1;
 
-    while temp != 1{
-        if temp % 2 == 0{
+    while temp != 1 {
+        if temp % 2 == 0 {
             temp /= 2;
-        }else{
+        } else {
             temp = temp * 3 + 1;
         }
 
@@ -20,7 +20,7 @@ fn get_cycle_length(n: i32) -> i32 {
 }
 
 fn main() {
-    let input_filename = "input.txt";
+    let input_filename = "input2.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);
@@ -28,7 +28,10 @@ fn main() {
     let contents = fs::read_to_string(input_filename)
         .expect("Cannot read file. Please, check the path!");
 
-    let lines = contents.split("\n");
+    let lines: Vec<&str> = contents
+        .split("\n")
+        .map(|x| x.trim())
+        .collect();
 
     for line in lines {
         let bounds: Vec<&str> = line.trim().split(" ").collect();
@@ -39,7 +42,7 @@ fn main() {
         for k in i..j + 1 {
             let cycle_length = get_cycle_length(k);
 
-            if cycle_length > max_cycle_length{
+            if cycle_length > max_cycle_length {
                 max_cycle_length = cycle_length;
             }
         }

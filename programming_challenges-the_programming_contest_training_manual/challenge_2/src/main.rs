@@ -7,7 +7,7 @@ fn check_field_indexes(i: usize, j: usize, n: usize, m: usize) -> bool {
 }
 
 fn main() {
-    let input_filename = "input.txt";
+    let input_filename = "input2.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);
@@ -15,7 +15,10 @@ fn main() {
     let contents = fs::read_to_string(input_filename)
         .expect("Cannot read file. Please, check the path!");
 
-    let lines: Vec<&str> = contents.split("\n").collect();
+    let lines: Vec<&str> = contents
+        .split("\n")
+        .map(|x| x.trim())
+        .collect();
     let mut rows: usize;
     let mut cols: usize;
 
