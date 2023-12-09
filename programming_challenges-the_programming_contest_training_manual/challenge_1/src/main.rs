@@ -20,7 +20,7 @@ fn get_cycle_length(n: i32) -> i32 {
 }
 
 fn main() {
-    let input_filename = "input2.txt";
+    let input_filename = "input.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);

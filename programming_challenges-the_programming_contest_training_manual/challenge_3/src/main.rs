@@ -3,7 +3,7 @@ use std::fs::OpenOptions;
 use std::io::Write;
 
 fn main() {
-    let input_filename = "input2.txt";
+    let input_filename = "input.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);

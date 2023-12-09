@@ -7,7 +7,7 @@ fn check_field_indexes(i: usize, j: usize, n: usize, m: usize) -> bool {
 }
 
 fn main() {
-    let input_filename = "input2.txt";
+    let input_filename = "input.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);
