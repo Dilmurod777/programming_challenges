@@ -1,5 +1,21 @@
 use std::fs;
 
+fn update_values(values: &mut Vec<i64>, ranges: &mut Vec<Vec<i64>>) {
+    for j in 0..values.len() {
+        for range in &*ranges {
+            let source = range[1];
+            let destination = range[0];
+            let count = range[2];
+
+            if values[j] >= source && values[j] < source + count {
+                values[j] = destination + values[j] - source;
+                break;
+            }
+        }
+    }
+
+    ranges.clear();
+}
 
 fn main() {
     let input_filename = "input1.txt";
@@ -35,37 +51,11 @@ fn main() {
             let parts: Vec<i64> = line.split(" ").map(|x| x.parse::<i64>().unwrap()).collect();
             ranges.push(parts);
         } else {
-            for j in 0..values.len() {
-                for range in &ranges {
-                    let source = range[1];
-                    let destination = range[0];
-                    let count = range[2];
-
-                    if values[j] >= source && values[j] < source + count {
-                        values[j] = destination + values[j] - source;
-                        break;
-                    }
-                }
-            }
-
-            ranges.clear();
+            update_values(&mut values, &mut ranges);
         }
     }
 
-    for j in 0..values.len() {
-        for range in &ranges {
-            let source = range[1];
-            let destination = range[0];
-            let count = range[2];
-
-            if values[j] >= source && values[j] < source + count {
-                values[j] = destination + values[j] - source;
-                break;
-            }
-        }
-    }
-
-    ranges.clear();
+    update_values(&mut values, &mut ranges);
 
     match values.iter().min() {
         None => {}
