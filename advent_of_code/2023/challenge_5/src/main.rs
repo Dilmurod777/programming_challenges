@@ -166,38 +166,44 @@ fn main() {
 
     let mut min_location = -1;
 
-    for seed in seeds {
-        let mut start_value = seed.start;
-        let end_value = seed.start + seed.count;
-        let mut found = false;
+    while !seeds.is_empty() {
+        let seed = seeds.pop().unwrap();
+        let s_start = seed.start;
+        let s_end = seed.start + seed.count;
+        let s_count = seed.count;
 
-        while start_value < end_value {
-            for range in &ranges {
-                println!("{} | {} | {} | {:?}", start_value, end_value, min_location, range);
-                if range.start <= start_value && start_value < range.start + range.count {
-                    if min_location == -1 {
-                        min_location = start_value + range.diff;
-                    } else {
-                        min_location = min(min_location, start_value + range.diff)
-                    }
-
-                    start_value = range.start + range.count;
-                    found = true;
-                    if start_value >= end_value {
-                        break;
-                    }
-                }
-            }
-
-            if !found {
-                break;
-            }
+        if s_count == 0 {
+            continue;
         }
 
-        if min_location == -1{
-            min_location = start_value;
+        for range in &ranges {
+            let r_start = range.start;
+            let r_end = range.start + range.count;
+            let r_diff = range.diff;
+
+            println!("{} {} | {} {} {} | {}", s_start, s_end, r_start, r_end, r_diff, min_location);
+            if s_start >= r_start && s_start < r_end {
+                if s_end < r_end {
+                    min_location = get_minimum(s_start + r_diff, min_location);
+                } else {
+                    min_location = get_minimum(s_start + r_diff, min_location);
+                    seeds.push(Seed {
+                        start: r_end,
+                        count: s_count - (r_end - s_start),
+                    })
+                }
+                break;
+            }
         }
     }
 
     println!("{}", min_location);
+}
+
+fn get_minimum(value: i64, rel_min: i64) -> i64 {
+    return if rel_min == -1 {
+        value
+    } else {
+        min(rel_min, value)
+    };
 }
