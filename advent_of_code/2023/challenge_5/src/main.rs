@@ -1,3 +1,4 @@
+use std::cmp::min;
 use std::fs;
 
 #[derive(Debug)]
@@ -39,11 +40,9 @@ fn update_ranges(ranges: &mut Vec<Range>, parts: &Vec<i64>) {
 
             if s < start {
                 if s + c <= start {
-                    println!("s + c <= start {:?} {:?}", range, parts);
                     update_ranges(ranges, &vec![d, s, c]);
                     break;
                 } else {
-                    println!("s + c > start {:?} {:?}", range, parts);
                     update_ranges(ranges, &vec![d, start, start - s]);
                     update_ranges(ranges, &vec![d, start, s + c - start]);
                     break;
@@ -51,7 +50,6 @@ fn update_ranges(ranges: &mut Vec<Range>, parts: &Vec<i64>) {
             } else {
                 if s < start + count {
                     if s + c <= start + count {
-                        println!("s + c <= start + count {:?} {:?}", range, parts);
                         ranges.insert(i + 1, Range {
                             start: start,
                             count: s - start,
@@ -74,10 +72,9 @@ fn update_ranges(ranges: &mut Vec<Range>, parts: &Vec<i64>) {
 
                         break;
                     } else {
-                        println!("s + c > start + count {:?} {:?}", range, parts);
                         ranges.insert(i + 1, Range {
                             start: start,
-                            count: s,
+                            count: s - start,
                             diff: diff,
                         });
 
@@ -88,11 +85,10 @@ fn update_ranges(ranges: &mut Vec<Range>, parts: &Vec<i64>) {
                         });
 
                         ranges.remove(i);
-                        update_ranges(ranges, &vec![d, start + count, c - start - count + s]);
+                        update_ranges(ranges, &vec![d - s + start + count, start + count, c - start - count + s]);
                         break;
                     }
                 } else {
-                    println!("s > start + count {:?} {:?}", range, parts);
                     continue;
                 }
             }
@@ -115,7 +111,7 @@ fn clean_empty_ranges(ranges: &mut Vec<Range>) {
 }
 
 fn main() {
-    let input_filename = "input1.txt";
+    let input_filename = "input2.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);
@@ -150,7 +146,7 @@ fn main() {
             }
 
 
-            println!("Seeds: {:?}", seeds);
+            // println!("Seeds: {:?}", seeds);
             continue;
         }
 
@@ -164,31 +160,44 @@ fn main() {
         }
     }
 
-    for range in &ranges {
-        println!(" - {:?}", range);
+    // for range in &ranges {
+    //     println!(" - {:?}", range);
+    // }
+
+    let mut min_location = -1;
+
+    for seed in seeds {
+        let mut start_value = seed.start;
+        let end_value = seed.start + seed.count;
+        let mut found = false;
+
+        while start_value < end_value {
+            for range in &ranges {
+                println!("{} | {} | {} | {:?}", start_value, end_value, min_location, range);
+                if range.start <= start_value && start_value < range.start + range.count {
+                    if min_location == -1 {
+                        min_location = start_value + range.diff;
+                    } else {
+                        min_location = min(min_location, start_value + range.diff)
+                    }
+
+                    start_value = range.start + range.count;
+                    found = true;
+                    if start_value >= end_value {
+                        break;
+                    }
+                }
+            }
+
+            if !found {
+                break;
+            }
+        }
+
+        if min_location == -1{
+            min_location = start_value;
+        }
     }
 
-    // let mut min = -1;
-    //
-    // for seed in seeds {
-    //     let mut value = seed.start;
-    //     while value <= seed.start + seed.count {
-    //         for range in &ranges {
-    //             println!("- {} | {} | {:?}", min, value, range);
-    //             if value >= range.start && value < range.start + range.count {
-    //                 if min == -1 {
-    //                     min = value + range.diff;
-    //                 } else {
-    //                     if min > value + range.diff {
-    //                         min = value + range.diff;
-    //                     }
-    //                 }
-    //
-    //                 value += range.count;
-    //             }
-    //         }
-    //     }
-    // }
-    //
-    // println!("{}", min);
+    println!("{}", min_location);
 }
