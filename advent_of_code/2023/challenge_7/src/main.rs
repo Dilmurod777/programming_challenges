@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::fs;
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
-enum HandType { None, FiveOfKind, FourOfKind, FullHouse, ThreeOfKind, TwoPair, OnePair, HighCard }
+enum HandType { FiveOfKind, FourOfKind, FullHouse, ThreeOfKind, TwoPair, OnePair, HighCard }
 
 #[derive(Debug)]
 struct Card {
@@ -11,12 +11,30 @@ struct Card {
     bid: i32,
 }
 
-fn calculate_hand_type(order: &str) -> &HandType {
-    let mut freqs: HashMap<String, i64> = HashMap::new();
+fn calculate_hand_type(card_value: &str) -> &HandType {
+    let mut freqs: HashMap<String, i32> = HashMap::new();
+    let mut jokers = 0;
 
-    for v in order.chars() {
-        freqs.entry(String::from(v)).or_default();
-        *freqs.get_mut(String::from(v).as_str()).unwrap() += 1;
+    let mut largest_key: String = String::new();
+    let mut largest_value: i32 = 0;
+
+    for v in card_value.chars() {
+        if v == 'J' {
+            jokers += 1;
+        } else {
+            freqs.entry(String::from(v)).or_default();
+            *freqs.get_mut(String::from(v).as_str()).unwrap() += 1;
+
+            let current_value = freqs.get(String::from(v).as_str()).unwrap();
+            if &largest_value < current_value {
+                largest_value = *current_value;
+                largest_key = v.to_string();
+            }
+        }
+    }
+
+    if !&largest_key.is_empty() {
+        *freqs.get_mut(largest_key.as_str()).unwrap() += jokers;
     }
 
     return match freqs.keys().len() {
@@ -30,7 +48,7 @@ fn calculate_hand_type(order: &str) -> &HandType {
             }
 
             &HandType::TwoPair
-        },
+        }
         2 => {
             for v in freqs.values() {
                 if v == &4 {
@@ -41,7 +59,7 @@ fn calculate_hand_type(order: &str) -> &HandType {
             &HandType::FullHouse
         }
         1 => &HandType::FiveOfKind,
-        _ => &HandType::None
+        _ => &HandType::FiveOfKind
     };
 }
 
@@ -51,7 +69,7 @@ fn get_str_as_numbers(value: &str) -> Vec<u32> {
             'A' => 14,
             'K' => 13,
             'Q' => 12,
-            'J' => 11,
+            'J' => 0,
             'T' => 10,
             _ => x.to_digit(10).unwrap()
         };
@@ -119,7 +137,7 @@ fn main() {
         HandType::ThreeOfKind, HandType::FullHouse,
         HandType::FourOfKind, HandType::FiveOfKind];
 
-    for key in order{
+    for key in order {
         if let Some(cards) = hands.get(&key) {
             for card in cards {
                 total += current_rank * card.bid;
