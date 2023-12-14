@@ -38,7 +38,7 @@ So, 33332 and 2AAAA are both four of a kind hands, but 33332 is stronger because
 
 To play Camel Cards, you are given a list of hands and their corresponding bid (your puzzle input). For example:
 
-<pre style="width: 110px;">
+<pre style="width: 100px;">
 32T3K 765
 T55J5 684
 KK677 28
@@ -58,18 +58,25 @@ Now, you can determine the total winnings of this set of hands by adding up the 
 
 Find the rank of every hand in your set. What are the total winnings?
 
-**Correct answer for *PART I*:** 840336
+**Correct answer for *PART I*:** 248396258
 
 ---
 --- Part Two ---
 
-As the race is about to start, you realize the piece of paper with race times and record distances you got earlier actually just has very bad kerning. There's really only one race - ignore the spaces between the numbers on each line.
+To make things a little more interesting, the Elf introduces one additional rule. Now, J cards are jokers - wildcards that can act like whatever card would make the hand the strongest type possible.
 
-So, the example from before:
+To balance this, J cards are now the weakest individual cards, weaker even than 2. The other cards stay in the same order: A, K, Q, T, 9, 8, 7, 6, 5, 4, 3, 2, J.
 
-<pre style="width: 180px;">
-Time:      7  15   30
-Distance:  9  40  200
+J cards can pretend to be whatever card is best for the purpose of determining hand type; for example, QJJQ2 is now considered four of a kind. However, for the purpose of breaking ties between two hands of the same type, J is always treated as J, not the card it's pretending to be: JKKK2 is weaker than QQQQ2 because J is weaker than Q.
+
+Now, the above example goes very differently:
+
+<pre style="width: 100px;">
+32T3K 765
+T55J5 684
+KK677 28
+KTJJT 220
+QQQJA 483
 </pre>
 
 ...now instead means this:
@@ -79,8 +86,12 @@ Time:      71530
 Distance:  940200
 </pre>
 
-Now, you have to figure out how many ways there are to win this single race. In this example, the race lasts for 71530 milliseconds and the record distance you need to beat is 940200 millimeters. You could hold the button anywhere from 14 to 71516 milliseconds and beat the record, a total of 71503 ways!
+- 32T3K is still the only one pair; it doesn't contain any jokers, so its strength doesn't increase.
+- KK677 is now the only two pair, making it the second-weakest hand.
+- T55J5, KTJJT, and QQQJA are now all four of a kind! T55J5 gets rank 3, QQQJA gets rank 4, and KTJJT gets rank 5.
 
-How many ways can you beat the record in this one much longer race?
+With the new joker rule, the total winnings in this example are 5905.
+
+Using the new joker rule, find the rank of every hand in your set. What are the new total winnings?
 
 **Correct answer for *PART II*:** 41382569
