@@ -26,7 +26,7 @@ fn gcd(first: usize, second: usize) -> usize {
 }
 
 fn main() {
-    let input_filename = "input4.txt";
+    let input_filename = "input2.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);
