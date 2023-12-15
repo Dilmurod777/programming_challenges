@@ -82,8 +82,18 @@ fn move_next_pipe(field: &mut Vec<Vec<char>>, current_position: &Vec<usize>, ini
     return possible_moves[0].clone();
 }
 
+fn is_loop_edge(edges: &Vec<Vec<usize>>, edge: &Vec<usize>) -> bool {
+    for i in 0..edges.len() {
+        if edges[i][0] == edge[0] && edges[i][1] == edge[1] {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 fn main() {
-    let input_filename = "input3.txt";
+    let input_filename = "input4.txt";
     let output_filename = "output.txt";
 
     let _ = fs::remove_file(output_filename);
@@ -113,9 +123,13 @@ fn main() {
         field.push(chars);
     }
 
+    let mut loop_positions: Vec<Vec<usize>> = Vec::new();
+    let initial_field = field.clone();
+
     let mut current_position = initial_position.clone();
     let mut step_count = 0;
     loop {
+        loop_positions.push(current_position.clone());
         current_position = move_next_pipe(&mut field, &current_position, &initial_position, step_count);
 
         if current_position.len() == 0 {
@@ -125,5 +139,25 @@ fn main() {
         }
     }
 
-    println!("{}", (step_count + 1) / 2);
+    println!("Steps: {}", (step_count + 1) / 2);
+
+    let mut crossings: i32;
+    let mut enclosed_positions = 0;
+
+    for i in 0..initial_field.len() {
+        crossings = 0;
+        for j in 0..initial_field[0].len() {
+            if is_loop_edge(&loop_positions, &vec![i, j]) {
+                if vec!['|', 'L', 'J'].contains(&initial_field[i][j]) {
+                    crossings += 1;
+                }
+            } else {
+                if crossings % 2 == 1 {
+                    enclosed_positions += 1;
+                }
+            }
+        }
+    }
+
+    println!("Enclosed count: {:?}", enclosed_positions);
 }

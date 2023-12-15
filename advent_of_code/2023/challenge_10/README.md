@@ -240,4 +240,4 @@ In this last example, 10 tiles are enclosed by the loop.
 
 Figure out whether you have time to search for the nest by calculating the area within the loop. How many tiles are enclosed by the loop?
 
-**Correct answer for *PART II*:** ?
+**Correct answer for *PART II*:** 357
