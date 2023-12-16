@@ -16,7 +16,7 @@ The output of each test case consists of either a single line containing the nam
 <h3>Sample Input</h3>
 <pre style="width: 110px">
 1
-
+<br/>
 3
 John Doe
 Jane Smith
