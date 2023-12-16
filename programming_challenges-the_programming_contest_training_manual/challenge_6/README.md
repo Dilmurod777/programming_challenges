@@ -1,7 +1,7 @@
 # Interpreter
 
 ### Description
-a certain computer has ten registers and 1,000 words of RAM. each register or RAM location holds a three-digit integer, between 0 and 999. Instructions are encoded as three-digit integers and stored in RAM. The encodings are as follows:
+A certain computer has ten registers and 1,000 words of RAM. each register or RAM location holds a three-digit integer, between 0 and 999. Instructions are encoded as three-digit integers and stored in RAM. The encodings are as follows:
 
 - **100**: means *halt*
 - **2dn**: means *set register d to n* (between 0 and 9)
@@ -10,8 +10,6 @@ a certain computer has ten registers and 1,000 words of RAM. each register or RA
 - **5ds**: means *set register d to the value of register s*
 - **6ds**: means *add the value of register s to register d*
 - **7ds**: means *multiply register d by the value of register s*
-- **8da**: means *set register d to the value in RAM whose address is in integer a*
-- **9sa**: means *set the value in RAM whose address is in register a to that of register s*
 - **0ds**: means *goto the location in register d unless register s contains 0*
 
 All registers initially contain 000. The initial content of the RAM is read from standard input. The first instruction to be executed is at RAM address 0. All results are reduced module 1,000. 
